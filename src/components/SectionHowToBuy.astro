@@ -1,0 +1,21 @@
+---
+const steps = [
+  { title: "Choose a category", desc: "Browse categories and discover books." },
+  { title: "Add to cart", desc: "Tap Add to Cart to save your chosen books." },
+  { title: "Checkout", desc: "Complete purchase from your cart system." },
+];
+---
+<section class="section">
+  <div class="container">
+    <h2 style="margin:0 0 12px;">How to buy</h2>
+    <div class="grid3">
+      {steps.map((s, idx) => (
+        <div class="card" style="padding:18px;">
+          <div class="badge" style="width:max-content;">Step {idx + 1}</div>
+          <h3 style="margin:12px 0 8px;">{s.title}</h3>
+          <p class="p">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

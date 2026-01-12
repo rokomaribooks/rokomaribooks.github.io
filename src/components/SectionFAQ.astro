@@ -1,0 +1,21 @@
+---
+const faq = [
+  { q: "Do I need an account?", a: "Not required unless your Cart API enforces login." },
+  { q: "Can I pay with mobile banking?", a: "Yes if your checkout/cart backend supports it." },
+  { q: "Is this website fast on mobile?", a: "Yes. Astro loads minimal JS by default." },
+];
+---
+<section class="section">
+  <div class="container">
+    <h2 style="margin:0 0 12px;">FAQ</h2>
+
+    <div style="display:grid; gap:12px;">
+      {faq.map((f) => (
+        <details class="card" style="padding:16px;">
+          <summary style="cursor:pointer; font-weight:800;">{f.q}</summary>
+          <p class="p" style="margin-top:8px;">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

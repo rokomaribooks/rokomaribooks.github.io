@@ -1,0 +1,25 @@
+---
+import HomeLayout from "../layouts/HomeLayout.astro";
+import BookCarousel from "../components/BookCarousel.astro";
+import SectionHowToBuy from "../components/SectionHowToBuy.astro";
+import SectionFAQ from "../components/SectionFAQ.astro";
+---
+<HomeLayout title="BookStore — Buy Books Online">
+  <div class="card" style="padding:24px;">
+    <div class="badge">Commercial Book Store</div>
+    <h1 class="h1">Buy books online with speed ⚡</h1>
+    <p class="p">A modern GitHub-hosted bookstore with categories, API-powered cards, cart integration, and optimized UI.</p>
+
+    <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;">
+      <a class="btn" href="/category/romance">Shop Romance</a>
+      <a class="btn secondary" href="/category/science">Explore Science</a>
+    </div>
+  </div>
+
+  <div data-category="featured">
+    <BookCarousel />
+  </div>
+
+  <SectionHowToBuy />
+  <SectionFAQ />
+</HomeLayout>

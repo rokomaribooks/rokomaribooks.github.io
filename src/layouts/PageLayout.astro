@@ -1,0 +1,14 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+const { title } = Astro.props;
+---
+<BaseLayout title={title}>
+  <section class="section">
+    <div class="container">
+      <div class="card" style="padding:24px;">
+        <h1 style="margin:0 0 12px;">{title}</h1>
+        <slot />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+import HomeLayout from "../../layouts/HomeLayout.astro";
+import BookCarousel from "../../components/BookCarousel.astro";
+import SectionHowToBuy from "../../components/SectionHowToBuy.astro";
+import SectionFAQ from "../../components/SectionFAQ.astro";
+
+const { slug } = Astro.params;
+const title = `Category: ${slug}`;
+---
+<HomeLayout title={title}>
+  <div class="card" style="padding:24px;">
+    <div class="badge">Category</div>
+    <h1 class="h1">{slug.toUpperCase()} Books</h1>
+    <p class="p">Swipe books, load more for performance, and add to cart instantly.</p>
+  </div>
+
+  <div data-category={slug}>
+    <BookCarousel />
+  </div>
+
+  <SectionHowToBuy />
+  <SectionFAQ />
+</HomeLayout>

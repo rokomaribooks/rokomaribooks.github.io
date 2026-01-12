@@ -1,0 +1,131 @@
+---
+import BookCardSkeleton from "./BookCardSkeleton.astro";
+---
+<section class="section">
+  <div class="container">
+    <div style="display:flex; align-items:end; justify-content:space-between; gap:12px;">
+      <div>
+        <div class="badge">Top Picks</div>
+        <h2 style="margin:10px 0 0;">Explore books</h2>
+        <p class="p">Swipe/drag or use arrows. Limited loading for performance.</p>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn secondary" data-left>←</button>
+        <button class="btn secondary" data-right>→</button>
+      </div>
+    </div>
+
+    <div
+      data-carousel-track
+      class="card"
+      style="margin-top:16px; padding:16px; display:flex; gap:14px; overflow:auto; scroll-snap-type:x mandatory;"
+    >
+      {Array.from({ length: 6 }).map(() => (
+        <BookCardSkeleton />
+      ))}
+    </div>
+
+    <div style="margin-top:16px; display:flex; justify-content:center;">
+      <button class="btn secondary" data-load-more>Load more</button>
+    </div>
+  </div>
+
+  <script>
+    import { fetchBooksByCategory } from "../scripts/api.js";
+    import { addToCart } from "../scripts/cart.js";
+    import { enableCarousel } from "../scripts/carousel.js";
+
+    const root = document.currentScript.closest("section");
+    const track = root.querySelector("[data-carousel-track]");
+    const btnLoadMore = root.querySelector("[data-load-more]");
+
+    enableCarousel(root);
+
+    let page = 1;
+    const LIMIT = 8;
+    const category = root.dataset.category || "featured";
+
+    function renderBooks(items){
+      const frag = document.createDocumentFragment();
+
+      items.forEach(book => {
+        const el = document.createElement("div");
+        el.className = "card";
+        el.style.width = "240px";
+        el.style.minWidth = "240px";
+        el.innerHTML = `
+          <img src="\${book.image}" alt="\${book.title}" loading="lazy" style="width:100%; height:160px; object-fit:cover;" />
+          <div style="padding:14px;">
+            <h3 style="margin:0 0 8px; font-size:16px;">\${book.title}</h3>
+            <p style="margin:0; color:rgba(234,240,255,0.72); font-size:13px; height:42px; overflow:hidden; line-height:1.6;">
+              \${book.description}
+            </p>
+            <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+              <div style="font-weight:900;">৳\${book.discountPrice}</div>
+              <div style="text-decoration:line-through; color:rgba(234,240,255,0.5); font-size:13px;">৳\${book.price}</div>
+              <div style="margin-left:auto; padding:7px 12px; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#00d084; font-size:13px;">
+                SAVE ৳\${book.price - book.discountPrice}
+              </div>
+            </div>
+            <button class="btn" style="width:100%; margin-top:12px;" data-add-to-cart data-book-id="\${book.id}">
+              Add to Cart
+            </button>
+          </div>
+        `;
+        frag.appendChild(el);
+      });
+
+      track.appendChild(frag);
+    }
+
+    async function load(){
+      if(page === 1){
+        track.innerHTML = "";
+      }
+
+      btnLoadMore.disabled = true;
+      btnLoadMore.textContent = "Loading...";
+
+      try{
+        const data = await fetchBooksByCategory({ category, limit: LIMIT, page });
+        renderBooks(data.items || []);
+
+        track.querySelectorAll("[data-add-to-cart]").forEach(btn => {
+          if(btn.dataset.bound) return;
+          btn.dataset.bound = "1";
+          btn.addEventListener("click", async () => {
+            const id = btn.dataset.bookId;
+            const old = btn.textContent;
+            btn.textContent = "Adding...";
+            btn.disabled = true;
+            try{
+              await addToCart(id, 1);
+              btn.textContent = "Added ✅";
+              setTimeout(() => { btn.textContent = old; btn.disabled = false; }, 1200);
+            }catch(err){
+              btn.textContent = "Failed ❌";
+              setTimeout(() => { btn.textContent = old; btn.disabled = false; }, 1500);
+            }
+          });
+        });
+
+        if(!data.hasMore){
+          btnLoadMore.style.display = "none";
+        }else{
+          btnLoadMore.disabled = false;
+          btnLoadMore.textContent = "Load more";
+        }
+      }catch(e){
+        btnLoadMore.textContent = "Error loading";
+      }
+    }
+
+    btnLoadMore.addEventListener("click", () => {
+      page += 1;
+      load();
+    });
+
+    load();
+  </script>
+</section>

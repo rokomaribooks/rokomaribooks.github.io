@@ -1,0 +1,23 @@
+---
+const nav = [
+  { href: "/", label: "Home" },
+  { href: "/category/romance", label: "Romance" },
+  { href: "/category/science", label: "Science" },
+  { href: "/category/business", label: "Business" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+---
+<header style="position:sticky; top:0; z-index:10; backdrop-filter: blur(16px); background: rgba(11,16,32,0.55); border-bottom: 1px solid rgba(255,255,255,0.08);">
+  <div class="container" style="display:flex; align-items:center; justify-content:space-between; padding:14px 0;">
+    <a href="/" style="font-weight:900; letter-spacing:0.5px;">
+      📚 Book<span style="color:var(--brand2)">Store</span>
+    </a>
+
+    <nav style="display:flex; gap:14px; flex-wrap:wrap; justify-content:flex-end;">
+      {nav.map((i) => (
+        <a class="badge" href={i.href}>{i.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
